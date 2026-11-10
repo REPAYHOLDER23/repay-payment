@@ -4,43 +4,116 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>REPAY | UPI Payment</title>
+<title>REPAY Payment</title>
 <style>
 *{box-sizing:border-box}
 body{
 margin:0;min-height:100vh;display:grid;place-items:center;
 padding:20px;font-family:Arial,sans-serif;
-background:linear-gradient(135deg,#101827,#203b55);
-color:#fff}
+background:linear-gradient(135deg,#101827,#203655);
+color:#fff
+}
 .card{
 width:100%;max-width:420px;padding:28px 22px;
 border:1px solid #40516a;border-radius:22px;
-background:#17263b;box-shadow:0 18px 50px #0006}
+background:#17263b;box-shadow:0 18px 50px #0006
+}
 .brand{text-align:center;font-size:30px;font-weight:bold;letter-spacing:5px}
-.sub{text-align:center;color:#b6c5d6;font-size:11px;letter-spacing:2px;margin-top:8px}
-.amount{text-align:center;font-size:42px;font-weight:bold;margin:28px 0 5px}
-.caption{text-align:center;color:#aab8ca;font-size:12px}
-.line{height:1px;background:#40516a;margin:24px 0}
-.row{display:flex;justify-content:space-between;gap:12px;padding:11px 0;font-size:14px}
-.key{color:#aab8ca}.value{text-align:right;font-weight:bold;overflow-wrap:anywhere}
-.pay{display:block;text-align:center;text-decoration:none;
-background:#b9f3d6;color:#09251a;font-weight:bold;
-padding:17px 10px;border-radius:13px;margin-top:24px}
-.note{text-align:center;color:#aab8ca;font-size:11px;line-height:1.6;margin-top:20px}
+.sub{text-align:center;color:#b6c5d6;font-size:11px;letter-spacing:2px;margin-top:5px}
+h2{text-align:center;font-size:23px;margin:28px 0 18px}
+input{
+width:100%;padding:15px;border-radius:10px;
+border:1px solid #60738b;font-size:20px;
+background:white;color:#111;margin:10px 0
+}
+.amount{text-align:center;font-size:38px;font-weight:bold;margin:25px 0}
+.caption{text-align:center;color:#aabaca;font-size:12px}
+.pay,.copy{
+display:block;width:100%;text-align:center;text-decoration:none;
+background:#b3f3d6;color:#09251a;font-weight:bold;
+padding:16px;border-radius:13px;margin-top:20px;
+border:0;font-size:16px;cursor:pointer
+}
+.copy{background:#dce8ff;margin-top:12px}
+.note{text-align:center;color:#aabaca;font-size:11px;line-height:1.6;margin-top:20px}
+.hidden{display:none}
+#result{overflow-wrap:anywhere;font-size:12px;color:#b3f3d6;margin-top:15px}
 </style>
 </head>
 <body>
 <div class="card">
 <div class="brand">REPAY</div>
-<div class="sub">UPI PAYMENT REQUEST</div>
-<div class="amount">₹4,300.00</div>
-<div class="caption">FIXED PAYMENT AMOUNT · INR</div>
-<div class="line"></div>
-<div class="row"><span class="key">Recipient</span><span class="value">Anshu Aman Singh</span></div>
-<div class="row"><span class="key">UPI ID</span><span class="value">anshuamansingh@fam</span></div>
-<div class="row"><span class="key">Payment method</span><span class="value">UPI Apps</span></div>
-<a class="pay" href="upi://pay?pa=anshuamansingh%40fam&amp;pn=Anshu%20Aman%20Singh&amp;am=4300.00&amp;cu=INR&amp;tn=REPAY">➜ TAP HERE TO PAY ₹4,300</a>
-<div class="note">Please verify the recipient name and amount in your UPI app before confirming payment.<br>REPAY · UPI Payment Request</div>
+<div class="sub">UPI PAYMENT SYSTEM</div>
+
+<div id="owner">
+<h2>Create Payment Link</h2>
+<div class="caption">Enter payment amount</div>
+<input id="amountInput" type="number" min="1" step="0.01"
+placeholder="Enter Amount ₹">
+<button class="pay" onclick="generate()">GENERATE PAYMENT LINK</button>
+<div id="result"></div>
+<button id="copyBtn" class="copy hidden" onclick="copyLink()">COPY PAYMENT LINK</button>
 </div>
+
+<div id="payer" class="hidden">
+<h2>PAYMENT REQUEST</h2>
+<div class="caption">PAYMENT AMOUNT</div>
+<div class="amount" id="displayAmount"></div>
+<div class="caption">Recipient: Anshu Aman Singh</div>
+<div class="caption">UPI ID: anshuamansingh@fam</div>
+<a class="pay" id="payButton">PAY NOW</a>
+</div>
+
+<div class="note">
+Please verify recipient name and amount in your UPI app before confirming payment.
+<hr>REPAY
+</div>
+</div>
+
+<script>
+const UPI_ID = "anshuamansingh@fam";
+const PAYEE = "Anshu Aman Singh";
+
+const params = new URLSearchParams(location.search);
+const amount = Number(params.get("amount"));
+
+if(params.has("amount") && Number.isFinite(amount) && amount > 0){
+document.getElementById("owner").classList.add("hidden");
+document.getElementById("payer").classList.remove("hidden");
+document.getElementById("displayAmount").textContent =
+"₹" + amount.toLocaleString("en-IN",{minimumFractionDigits:2});
+const upi = new URLSearchParams({
+pa: UPI_ID,
+pn: PAYEE,
+am: amount.toFixed(2),
+cu: "INR",
+tn: "Repay Payment"
+});
+document.getElementById("payButton").href = "upi://pay?" + upi.toString();
+}
+
+let generatedLink = "";
+
+function generate(){
+const amount = Number(document.getElementById("amountInput").value);
+if(!Number.isFinite(amount) || amount < 1){
+alert("Please enter a valid amount");
+return;
+}
+generatedLink = location.origin + location.pathname +
+"?amount=" + amount.toFixed(2);
+document.getElementById("result").textContent = generatedLink;
+document.getElementById("copyBtn").classList.remove("hidden");
+}
+
+async function copyLink(){
+try{
+await navigator.clipboard.writeText(generatedLink);
+alert("Payment link copied!");
+}catch(e){
+prompt("Copy your payment link:",generatedLink);
+}
+}
+</script>
 </body>
 </html>
