@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#101827">
+<title>REPAY | UPI Payment Request</title>
+<style>
+:root{color-scheme:dark}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;display:grid;place-items:center;padding:22px;background:radial-gradient(circle at top,#1d3554,#0b1220 58%);font-family:Arial,Helvetica,sans-serif;color:#f8fafc}
+.card{width:min(100%,430px);border:1px solid #334155;border-radius:24px;padding:28px 22px;background:linear-gradient(160deg,#17263b,#101827 70%);box-shadow:0 22px 70px #0008}
+.brand{text-align:center;font-size:30px;letter-spacing:5px;font-weight:700}
+.sub{text-align:center;color:#aab8ca;font-size:11px;letter-spacing:2px;margin-top:7px}
+.pill{width:max-content;margin:24px auto 12px;border:1px solid #365b55;color:#8be0bb;background:#15352f;padding:7px 12px;border-radius:30px;font-size:11px;letter-spacing:1px}
+.amount{text-align:center;font-size:42px;font-weight:700;margin:8px 0 4px}
+.caption{text-align:center;color:#9eacbd;font-size:12px}
+.rule{height:1px;background:#344256;margin:24px 0}
+.row{display:flex;justify-content:space-between;gap:12px;padding:10px 0;font-size:14px}
+.key{color:#9eacbd}.value{text-align:right;font-weight:600;overflow-wrap:anywhere}
+.pay{display:block;text-decoration:none;text-align:center;background:#b9f3d6;color:#09251a;font-weight:700;padding:17px 12px;border-radius:14px;margin-top:22px;font-size:15px}
+.copy{display:block;width:100%;margin-top:11px;padding:13px;border:1px solid #526176;border-radius:14px;background:transparent;color:#e7edf5;font-weight:600;font-size:14px}
+.note{color:#9eacbd;text-align:center;font-size:11px;line-height:1.5;margin:18px 4px 0}
+</style>
+</head>
+<body>
+<main class="card">
+  <div class="brand">REPAY</div>
+  <div class="sub">UPI PAYMENT REQUEST</div>
+  <div class="pill">PAYMENT DETAILS</div>
+  <div class="amount">₹4,300.00</div>
+  <div class="caption">Fixed amount · INR</div>
+  <div class="rule"></div>
+  <div class="row"><span class="key">Recipient</span><span class="value">Anshu Aman Singh</span></div>
+  <div class="row"><span class="key">UPI ID</span><span class="value">anshuamansingh@fam</span></div>
+  <div class="row"><span class="key">Payment method</span><span class="value">UPI apps</span></div>
+  <a class="pay" href="upi://pay?pa=anshuamansingh%40fam&amp;pn=Anshu%20Aman%20Singh&amp;am=4300.00&amp;cu=INR&amp;tn=REPAY%20Payment">➜ TAP HERE TO PAY ₹4,300</a>
+  <button class="copy" onclick="navigator.clipboard.writeText('anshuamansingh@fam').then(()=>this.textContent='UPI ID COPIED').catch(()=>alert('UPI ID: anshuamansingh@fam'))">COPY UPI ID</button>
+  <p class="note">REPAY is the page label. Payment is processed by your selected UPI app. Please verify the recipient name and amount in your UPI app before paying.</p>
+</main>
+</body>
+</html>
