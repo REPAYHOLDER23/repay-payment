@@ -1,56 +1,160 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="theme-color" content="#102a43">
-<title>REPAY | Payment</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#159b69">
+<title>REPAY — Secure Payment</title>
 <style>
-:root{--navy:#102a43;--blue:#1769aa;--muted:#627d98;--line:#e5edf4;--bg:#f3f7fb}
-*{box-sizing:border-box}body{margin:0;background:var(--bg);font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;color:var(--navy);min-height:100vh;display:grid;place-items:center;padding:22px}
-.card{width:min(100%,440px);background:#fff;border:1px solid var(--line);border-radius:22px;box-shadow:0 16px 45px #102a4312;overflow:hidden}
-.top{padding:22px 24px;background:linear-gradient(135deg,#102a43,#1769aa);color:white;display:flex;align-items:center;justify-content:space-between}
-.brand{font-size:25px;font-weight:850;letter-spacing:2px}.secure{font-size:11px;border:1px solid #ffffff55;border-radius:99px;padding:7px 10px;color:#eaf5ff}
-.main{padding:25px 24px 22px}.eyebrow{font-size:11px;letter-spacing:1.2px;color:var(--muted);font-weight:750;margin:0 0 7px}.product{font-size:20px;font-weight:750;margin:0 0 22px;overflow-wrap:anywhere}
-.customer{font-size:16px;font-weight:650;margin:0 0 22px;overflow-wrap:anywhere}
-.amountbox{background:#f1f7fc;border:1px solid #e0edf7;border-radius:16px;padding:17px;margin:0 0 20px}.amount{font-size:34px;line-height:1.2;font-weight:850;letter-spacing:-1px;margin:0}
-.pay{display:block;width:100%;border:0;border-radius:13px;padding:16px;background:var(--blue);color:#fff;font-size:16px;font-weight:800;text-decoration:none;text-align:center;box-shadow:0 7px 18px #1769aa30}
-.note{text-align:center;color:var(--muted);font-size:12px;line-height:1.5;margin:15px 4px 0}
-.footer{border-top:1px solid var(--line);padding:15px 20px;text-align:center;color:#829ab1;font-size:11px}
-.error{padding:30px 24px;text-align:center}.error h2{margin:0 0 8px}.error p{color:var(--muted);font-size:14px;line-height:1.5}
-@media(max-width:380px){body{padding:12px}.main{padding:21px 18px}.top{padding:19px 18px}}
+:root{--green:#159b69;--green-dark:#108257;--ink:#17211d;--muted:#66756e;--line:#e7eeea;--bg:#f2f5f7}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);font-family:Arial,Helvetica,sans-serif;color:var(--ink);min-height:100vh;padding:22px 14px;display:flex;justify-content:center;align-items:center}
+.wrap{width:100%;max-width:430px}
+.card{background:#fff;border-radius:22px;padding:22px 20px;box-shadow:0 12px 34px rgba(22,45,34,.09)}
+.top{display:flex;align-items:center;justify-content:space-between;padding-bottom:17px}
+.brand{font-size:29px;font-weight:800;letter-spacing:.5px;color:var(--green)}
+.secure{font-size:11px;font-weight:700;color:#168554;background:#eaf8f0;padding:8px 10px;border-radius:30px}
+.rule{height:1px;background:var(--line);margin:0 0 18px}
+.timer{background:#fff4e5;border-radius:15px;padding:16px 12px;text-align:center;margin-bottom:18px}
+.timer-label{font-size:11px;font-weight:800;letter-spacing:1px;color:#a65b00}
+.timer-value{font-size:34px;line-height:1.2;font-weight:800;color:#c56a00;margin:6px 0 4px;font-variant-numeric:tabular-nums}
+.timer-note{font-size:11px;color:#a65b00}
+.amount{text-align:center;margin:0 0 18px}
+.amount-label{font-size:11px;font-weight:800;letter-spacing:1px;color:var(--muted)}
+.amount-value{font-size:34px;font-weight:800;line-height:1.25;color:#17211d;margin-top:5px;font-variant-numeric:tabular-nums;overflow-wrap:anywhere}
+.details{border-top:1px solid var(--line);padding-top:17px;display:grid;gap:16px}
+.field-label{font-size:11px;font-weight:800;letter-spacing:.7px;color:var(--muted);margin-bottom:5px}
+.field-value{font-size:16px;font-weight:700;overflow-wrap:anywhere}
+.status{display:flex;align-items:center;justify-content:space-between;margin-top:18px}
+.pending{font-size:12px;font-weight:800;color:#a56a00;background:#fff5df;padding:7px 11px;border-radius:20px}
+.pay{display:block;width:100%;border:0;border-radius:12px;background:var(--green);color:white;font-size:17px;font-weight:800;letter-spacing:.4px;padding:16px;margin-top:22px;cursor:pointer}
+.pay:active{background:var(--green-dark)}
+.pay:disabled{background:#aab8b1;cursor:not-allowed}
+.footer{text-align:center;color:#75827c;font-size:11px;margin-top:18px}
+.message{text-align:center;padding:35px 15px;color:#a33;font-weight:700}
+.hidden{display:none!important}
+@media(max-width:360px){.card{padding:18px 15px}.amount-value{font-size:30px}.timer-value{font-size:31px}}
 </style>
 </head>
 <body>
-<section class="card" id="paymentCard" hidden>
-  <header class="top"><div class="brand">REPAY</div><div class="secure">UPI PAYMENT</div></header>
-  <main class="main">
-    <p class="eyebrow">PAYMENT FOR</p><h1 class="product" id="product">—</h1>
-    <p class="eyebrow">CUSTOMER NAME</p><p class="customer" id="customer">—</p>
-    <div class="amountbox"><p class="eyebrow">AMOUNT TO PAY</p><p class="amount" id="amount">₹0.00</p></div>
-    <a class="pay" id="payButton" href="#">PAY NOW</a>
-    <p class="note">Tap “Pay Now” and choose your preferred UPI app to complete the payment. Please verify the amount and recipient name in your UPI app before paying.</p>
+<div class="wrap">
+  <main class="card" id="paymentCard">
+    <header class="top">
+      <div class="brand">REPAY</div>
+      <div class="secure">Secure Payment</div>
+    </header>
+    <div class="rule"></div>
+
+    <section class="timer" aria-live="polite">
+      <div class="timer-label">TIME REMAINING</div>
+      <div class="timer-value" id="timerValue">--:--</div>
+      <div class="timer-note" id="timerNote">Complete your payment before time runs out</div>
+    </section>
+
+    <section class="amount">
+      <div class="amount-label">TOTAL AMOUNT</div>
+      <div class="amount-value" id="amountValue">₹0.00</div>
+    </section>
+
+    <section class="details">
+      <div>
+        <div class="field-label">CUSTOMER NAME</div>
+        <div class="field-value" id="customerValue">—</div>
+      </div>
+      <div>
+        <div class="field-label">PRODUCT NAME</div>
+        <div class="field-value" id="productValue">—</div>
+      </div>
+    </section>
+
+    <div class="status">
+      <strong>Payment Status</strong>
+      <span class="pending" id="statusValue">Pending</span>
+    </div>
+
+    <button class="pay" id="payButton" type="button">PAY NOW</button>
+    <div class="footer">Powered by REPAY</div>
   </main>
-  <footer class="footer">Powered by REPAY · Thank you</footer>
-</section>
-<section class="card error" id="errorCard">
-  <header class="top"><div class="brand">REPAY</div><div class="secure">PAYMENT</div></header>
-  <h2>Payment link not complete</h2><p>Please ask the sender for a valid REPAY payment link.</p>
-</section>
+  <div class="message hidden" id="errorMessage"></div>
+</div>
+
 <script>
-const p=new URLSearchParams(location.search);
-const amount=Number(p.get('amount'));
-const pa=p.get('pa')||'';
-const pn=p.get('pn')||'';
-const product=p.get('product')||'';
-const customer=p.get('customer')||'';
-if(Number.isFinite(amount)&&amount>0&&pa&&pn&&product&&customer){
-  document.getElementById('errorCard').hidden=true;
-  document.getElementById('paymentCard').hidden=false;
-  document.getElementById('product').textContent=product;
-  document.getElementById('customer').textContent=customer;
-  document.getElementById('amount').textContent=new Intl.NumberFormat('en-IN',{style:'currency',currency:'INR'}).format(amount);
-  const upi=new URLSearchParams({pa,pn,am:amount.toFixed(2),cu:'INR',tn:'REPAY - '+product+' - '+customer});
-  document.getElementById('payButton').href='upi://pay?'+upi.toString();
-}
+(function(){
+  const params = new URLSearchParams(location.search);
+  const amount = Number(params.get('amount'));
+  const pa = (params.get('pa') || '').trim();
+  const pn = (params.get('pn') || 'REPAY').trim();
+  const customer = (params.get('customer') || '').trim();
+  const product = (params.get('product') || '').trim();
+  const minutes = Number(params.get('minutes'));
+  const linkId = (params.get('id') || '').trim();
+
+  const card = document.getElementById('paymentCard');
+  const error = document.getElementById('errorMessage');
+  const payButton = document.getElementById('payButton');
+  const timerValue = document.getElementById('timerValue');
+  const timerNote = document.getElementById('timerNote');
+  const statusValue = document.getElementById('statusValue');
+
+  function fail(message){
+    card.classList.add('hidden');
+    error.textContent = message;
+    error.classList.remove('hidden');
+  }
+  if(!Number.isFinite(amount) || amount <= 0 || !pa || !customer || !product || !Number.isFinite(minutes) || minutes <= 0 || !linkId){
+    fail('Payment link is incomplete or invalid. Please contact the sender.');
+    return;
+  }
+
+  document.getElementById('amountValue').textContent = new Intl.NumberFormat('en-IN',{style:'currency',currency:'INR',minimumFractionDigits:2}).format(amount);
+  document.getElementById('customerValue').textContent = customer;
+  document.getElementById('productValue').textContent = product;
+
+  // Start once on the first opening in this browser. Reopening/reloading uses the same expiry.
+  const storageKey = 'repay_expiry_' + linkId;
+  let expiry = Number(localStorage.getItem(storageKey));
+  if(!Number.isFinite(expiry) || expiry <= 0){
+    expiry = Date.now() + minutes * 60 * 1000;
+    localStorage.setItem(storageKey, String(expiry));
+  }
+
+  function renderTimer(){
+    const remaining = Math.max(0, expiry - Date.now());
+    if(remaining <= 0){
+      timerValue.textContent = '00:00';
+      timerNote.textContent = 'This payment link has expired';
+      statusValue.textContent = 'Expired';
+      statusValue.style.color = '#a33';
+      statusValue.style.background = '#fdecec';
+      payButton.disabled = true;
+      payButton.textContent = 'LINK EXPIRED';
+      return;
+    }
+    const totalSeconds = Math.ceil(remaining / 1000);
+    const h = Math.floor(totalSeconds / 3600);
+    const m = Math.floor((totalSeconds % 3600) / 60);
+    const s = totalSeconds % 60;
+    timerValue.textContent = h > 0
+      ? String(h).padStart(2,'0') + ':' + String(m).padStart(2,'0') + ':' + String(s).padStart(2,'0')
+      : String(m).padStart(2,'0') + ':' + String(s).padStart(2,'0');
+    payButton.disabled = false;
+  }
+  renderTimer();
+  const interval = setInterval(function(){
+    renderTimer();
+    if(Date.now() >= expiry) clearInterval(interval);
+  }, 250);
+
+  payButton.addEventListener('click', function(){
+    if(Date.now() >= expiry){ renderTimer(); return; }
+    const note = 'REPAY - ' + product;
+    const upi = 'upi://pay?pa=' + encodeURIComponent(pa)
+      + '&pn=' + encodeURIComponent(pn)
+      + '&am=' + encodeURIComponent(amount.toFixed(2))
+      + '&cu=INR&tn=' + encodeURIComponent(note);
+    location.href = upi;
+  });
+})();
 </script>
-</body></html>
+</body>
+</html>
