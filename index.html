@@ -4,116 +4,317 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>REPAY Payment</title>
+<title>REPAY | Payment Solutions</title>
 <style>
 *{box-sizing:border-box}
 body{
-margin:0;min-height:100vh;display:grid;place-items:center;
-padding:20px;font-family:Arial,sans-serif;
-background:linear-gradient(135deg,#101827,#203655);
-color:#fff
+margin:0;min-height:100vh;padding:24px 14px;
+font-family:Arial,sans-serif;
+background:#f3f5f9;color:#172033;
 }
+.container{max-width:480px;margin:25px auto}
 .card{
-width:100%;max-width:420px;padding:28px 22px;
-border:1px solid #40516a;border-radius:22px;
-background:#17263b;box-shadow:0 18px 50px #0006
+background:#fff;border:1px solid #e4e8ef;
+border-radius:18px;padding:24px;margin-bottom:16px;
+box-shadow:0 8px 28px #1720330a;
 }
-.brand{text-align:center;font-size:30px;font-weight:bold;letter-spacing:5px}
-.sub{text-align:center;color:#b6c5d6;font-size:11px;letter-spacing:2px;margin-top:5px}
-h2{text-align:center;font-size:23px;margin:28px 0 18px}
-input{
-width:100%;padding:15px;border-radius:10px;
-border:1px solid #60738b;font-size:20px;
-background:white;color:#111;margin:10px 0
+.header{text-align:center;margin-bottom:22px}
+.logo{font-size:29px;font-weight:800;letter-spacing:5px;color:#142c49}
+.subtitle{font-size:10px;letter-spacing:2px;color:#8491a3;margin-top:6px}
+h2{font-size:18px;margin:0 0 18px;color:#182b43}
+label{display:block;font-size:12px;font-weight:700;color:#526176;margin:14px 0 7px}
+input,select{
+width:100%;height:49px;padding:0 13px;
+border:1px solid #dce2ea;border-radius:10px;
+background:#fff;font-size:15px;color:#182b43;
+outline:none;
 }
-.amount{text-align:center;font-size:38px;font-weight:bold;margin:25px 0}
-.caption{text-align:center;color:#aabaca;font-size:12px}
-.pay,.copy{
-display:block;width:100%;text-align:center;text-decoration:none;
-background:#b3f3d6;color:#09251a;font-weight:bold;
-padding:16px;border-radius:13px;margin-top:20px;
-border:0;font-size:16px;cursor:pointer
+input:focus,select:focus{border-color:#315b8a}
+button,.pay{
+width:100%;height:49px;border:0;border-radius:10px;
+font-size:14px;font-weight:700;cursor:pointer;
+display:flex;align-items:center;justify-content:center;
+text-decoration:none;
 }
-.copy{background:#dce8ff;margin-top:12px}
-.note{text-align:center;color:#aabaca;font-size:11px;line-height:1.6;margin-top:20px}
-.hidden{display:none}
-#result{overflow-wrap:anywhere;font-size:12px;color:#b3f3d6;margin-top:15px}
+.primary,.pay{background:#173b62;color:white;margin-top:17px}
+.secondary{background:#edf2f8;color:#23415f;margin-top:10px}
+.danger{background:#fff0f0;color:#bd3535;border:0}
+.upi-item{
+border:1px solid #e5e9ef;border-radius:12px;
+padding:13px;margin-top:10px;
+display:flex;align-items:center;justify-content:space-between;
+gap:10px;
+}
+.upi-details{min-width:0;overflow-wrap:anywhere}
+.upi-name{font-weight:700;font-size:14px}
+.upi-id{font-size:12px;color:#778499;margin-top:5px}
+.delete{width:auto;height:34px;padding:0 12px;font-size:12px;flex-shrink:0}
+.small{font-size:11px;color:#8a96a7;line-height:1.6;margin-top:12px}
+.amount{text-align:center;font-size:38px;font-weight:800;margin:22px 0;color:#173b62}
+.center{text-align:center}
+.hidden{display:none!important}
+#result{
+background:#f1f5fa;border-radius:10px;padding:13px;
+font-size:12px;overflow-wrap:anywhere;line-height:1.6;margin-top:14px;
+}
+.note{text-align:center;font-size:11px;color:#8994a3;line-height:1.7;margin-top:18px}
+hr{border:0;border-top:1px solid #edf0f4;margin:18px 0}
+.status{font-size:11px;color:#25805b;margin-bottom:15px}
 </style>
 </head>
 <body>
-<div class="card">
-<div class="brand">REPAY</div>
-<div class="sub">UPI PAYMENT SYSTEM</div>
+<div class="container">
 
+<div class="header">
+<div class="logo">REPAY</div>
+<div class="subtitle">SMART UPI PAYMENT SYSTEM</div>
+</div>
+
+<!-- OWNER PANEL -->
 <div id="owner">
+
+<div class="card">
+<h2>UPI Management</h2>
+<div class="status">● UPI settings saved on this device</div>
+
+<label>Account / Recipient Name</label>
+<input id="newName" type="text" placeholder="Enter account name">
+
+<label>UPI ID</label>
+<input id="newUpi" type="text" placeholder="example@bank">
+
+<button class="primary" id="addBtn">+ ADD UPI ACCOUNT</button>
+
+<div class="small">
+Add your UPI accounts here. You can remove any account whenever required.
+</div>
+<hr>
+<h2>Saved UPI Accounts</h2>
+<div id="upiList"></div>
+</div>
+
+<div class="card">
 <h2>Create Payment Link</h2>
-<div class="caption">Enter payment amount</div>
-<input id="amountInput" type="number" min="1" step="0.01"
-placeholder="Enter Amount ₹">
-<button class="pay" onclick="generate()">GENERATE PAYMENT LINK</button>
-<div id="result"></div>
-<button id="copyBtn" class="copy hidden" onclick="copyLink()">COPY PAYMENT LINK</button>
+
+<label>Payment Amount (INR)</label>
+<input id="amountInput" type="number" min="1" step="0.01" placeholder="Enter amount">
+
+<label>Select Your UPI Account</label>
+<select id="upiSelect"></select>
+
+<button class="primary" id="generateBtn">GENERATE PAYMENT LINK</button>
+
+<div id="result" class="hidden"></div>
+<button class="secondary hidden" id="copyBtn">COPY PAYMENT LINK</button>
+<div class="small">
+Check the amount and selected UPI account before sharing the link.
+</div>
+</div>
 </div>
 
-<div id="payer" class="hidden">
-<h2>PAYMENT REQUEST</h2>
-<div class="caption">PAYMENT AMOUNT</div>
+<!-- CUSTOMER PAYMENT PAGE -->
+<div id="payer" class="card hidden">
+<div class="center">
+<div class="subtitle">REPAY PAYMENT REQUEST</div>
+<h2 style="margin-top:18px">Payment Details</h2>
+<div class="small">AMOUNT TO PAY</div>
 <div class="amount" id="displayAmount"></div>
-<div class="caption">Recipient: Anshu Aman Singh</div>
-<div class="caption">UPI ID: anshuamansingh@fam</div>
+<hr>
+<div class="small">PAYMENT TO</div>
+<h2 id="displayName" style="margin:8px 0"></h2>
+<div class="upi-id" id="displayUpi"></div>
 <a class="pay" id="payButton">PAY NOW</a>
+<div class="note">
+You can use any supported UPI app, such as PhonePe, Google Pay, Paytm or BHIM.<br>
+Verify the recipient and amount in your UPI app before paying.
+</div>
+</div>
 </div>
 
-<div class="note">
-Please verify recipient name and amount in your UPI app before confirming payment.
-<hr>REPAY
-</div>
+<div class="note">REPAY · Secure payment experience</div>
 </div>
 
 <script>
-const UPI_ID = "anshuamansingh@fam";
-const PAYEE = "Anshu Aman Singh";
+const STORAGE_KEY = "repay_upi_accounts_v1";
 
-const params = new URLSearchParams(location.search);
-const amount = Number(params.get("amount"));
+let accounts = [];
 
-if(params.has("amount") && Number.isFinite(amount) && amount > 0){
-document.getElementById("owner").classList.add("hidden");
-document.getElementById("payer").classList.remove("hidden");
-document.getElementById("displayAmount").textContent =
-"₹" + amount.toLocaleString("en-IN",{minimumFractionDigits:2});
-const upi = new URLSearchParams({
-pa: UPI_ID,
-pn: PAYEE,
-am: amount.toFixed(2),
-cu: "INR",
-tn: "Repay Payment"
-});
-document.getElementById("payButton").href = "upi://pay?" + upi.toString();
+try {
+accounts = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
+if(!Array.isArray(accounts)) accounts = [];
+} catch(e) {
+accounts = [];
 }
+
+if(accounts.length === 0){
+accounts = [{
+id: "default",
+name: "Anshu Aman Singh",
+upi: "anshuamansingh@fam"
+}];
+saveAccounts();
+}
+
+function saveAccounts(){
+localStorage.setItem(STORAGE_KEY, JSON.stringify(accounts));
+}
+
+function renderAccounts(){
+const list = document.getElementById("upiList");
+const select = document.getElementById("upiSelect");
+
+list.innerHTML = "";
+select.innerHTML = "";
+
+accounts.forEach((account,index)=>{
+const option = document.createElement("option");
+option.value = account.id;
+option.textContent = account.name + " — " + account.upi;
+select.appendChild(option);
+
+const item = document.createElement("div");
+item.className = "upi-item";
+
+const details = document.createElement("div");
+details.className = "upi-details";
+
+const name = document.createElement("div");
+name.className = "upi-name";
+name.textContent = account.name;
+
+const upi = document.createElement("div");
+upi.className = "upi-id";
+upi.textContent = account.upi;
+
+details.append(name,upi);
+
+const remove = document.createElement("button");
+remove.className = "danger delete";
+remove.textContent = "DELETE";
+remove.addEventListener("click",()=>{
+if(!confirm("Delete this UPI account?")) return;
+accounts.splice(index,1);
+saveAccounts();
+renderAccounts();
+});
+
+item.append(details,remove);
+list.appendChild(item);
+});
+
+if(accounts.length === 0){
+list.textContent = "No UPI accounts saved. Add a UPI account first.";
+const option = document.createElement("option");
+option.textContent = "Add a UPI account first";
+option.value = "";
+select.appendChild(option);
+}
+}
+
+document.getElementById("addBtn").addEventListener("click",()=>{
+const name = document.getElementById("newName").value.trim();
+const upi = document.getElementById("newUpi").value.trim();
+
+if(!name || !upi){
+alert("Please enter recipient name and UPI ID.");
+return;
+}
+if(!/^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+$/.test(upi)){
+alert("Please enter a valid UPI ID.");
+return;
+}
+if(accounts.some(a=>a.upi.toLowerCase()===upi.toLowerCase())){
+alert("This UPI ID is already saved.");
+return;
+}
+
+accounts.push({
+id: "upi_" + Date.now() + "_" + Math.random().toString(36).slice(2,7),
+name:name,
+upi:upi
+});
+
+saveAccounts();
+renderAccounts();
+
+document.getElementById("newName").value="";
+document.getElementById("newUpi").value="";
+alert("UPI account added successfully.");
+});
 
 let generatedLink = "";
 
-function generate(){
+document.getElementById("generateBtn").addEventListener("click",()=>{
 const amount = Number(document.getElementById("amountInput").value);
-if(!Number.isFinite(amount) || amount < 1){
-alert("Please enter a valid amount");
+const selected = accounts.find(a=>a.id===document.getElementById("upiSelect").value);
+
+if(!Number.isFinite(amount) || amount<1){
+alert("Please enter a valid amount.");
 return;
 }
-generatedLink = location.origin + location.pathname +
-"?amount=" + amount.toFixed(2);
-document.getElementById("result").textContent = generatedLink;
-document.getElementById("copyBtn").classList.remove("hidden");
+if(!selected){
+alert("Please add and select a UPI account.");
+return;
 }
 
-async function copyLink(){
+const params = new URLSearchParams({
+amount:amount.toFixed(2),
+pa:selected.upi,
+pn:selected.name
+});
+
+generatedLink = location.origin + location.pathname + "?" + params.toString();
+
+const result = document.getElementById("result");
+result.textContent = generatedLink;
+result.classList.remove("hidden");
+document.getElementById("copyBtn").classList.remove("hidden");
+});
+
+document.getElementById("copyBtn").addEventListener("click",async()=>{
 try{
 await navigator.clipboard.writeText(generatedLink);
-alert("Payment link copied!");
+alert("Payment link copied successfully.");
 }catch(e){
 prompt("Copy your payment link:",generatedLink);
 }
+});
+
+// CUSTOMER VIEW
+const params = new URLSearchParams(location.search);
+const amount = Number(params.get("amount"));
+const payeeUpi = params.get("pa") || "";
+const payeeName = params.get("pn") || "";
+
+if(
+params.has("amount") &&
+Number.isFinite(amount) &&
+amount>=1 &&
+payeeUpi &&
+payeeName &&
+/^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+$/.test(payeeUpi)
+){
+document.getElementById("owner").classList.add("hidden");
+document.getElementById("payer").classList.remove("hidden");
+
+document.getElementById("displayAmount").textContent =
+"₹" + amount.toLocaleString("en-IN",{minimumFractionDigits:2});
+
+document.getElementById("displayName").textContent = payeeName;
+document.getElementById("displayUpi").textContent = payeeUpi;
+
+const upiParams = new URLSearchParams({
+pa:payeeUpi,
+pn:payeeName,
+am:amount.toFixed(2),
+cu:"INR",
+tn:"REPAY Payment"
+});
+
+document.getElementById("payButton").href = "upi://pay?" + upiParams.toString();
 }
+
+renderAccounts();
 </script>
 </body>
 </html>
