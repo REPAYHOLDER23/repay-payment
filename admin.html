@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#102a43"><title>REPAY | Admin</title>
+<style>
+:root{--navy:#102a43;--blue:#1769aa;--muted:#627d98;--line:#e5edf4;--bg:#f3f7fb;--red:#b42318}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;color:var(--navy);padding:22px}
+.wrap{max-width:720px;margin:0 auto}.header{background:linear-gradient(135deg,#102a43,#1769aa);color:white;padding:22px 24px;border-radius:20px;margin-bottom:18px}.brand{font-size:25px;font-weight:850;letter-spacing:2px}.sub{font-size:13px;color:#d7e9f7;margin-top:5px}
+.panel{background:#fff;border:1px solid var(--line);border-radius:18px;padding:21px;margin:14px 0;box-shadow:0 8px 28px #102a4309}
+h2{font-size:17px;margin:0 0 16px}.field{margin:12px 0}label{display:block;font-size:12px;font-weight:750;color:var(--muted);margin-bottom:6px}
+input,select{width:100%;padding:13px 12px;border:1px solid #cbd8e4;border-radius:10px;font-size:15px;background:white;color:var(--navy);outline:none}input:focus,select:focus{border-color:var(--blue);box-shadow:0 0 0 3px #1769aa18}
+button{border:0;border-radius:10px;padding:13px 16px;background:var(--blue);color:#fff;font-weight:800;font-size:14px;cursor:pointer}.secondary{background:#eaf2f9;color:var(--navy)}.danger{background:#fff0ef;color:var(--red);padding:8px 10px}
+.row{display:flex;gap:10px;align-items:center}.row>*{flex:1}.account{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid var(--line)}.account:last-child{border:0}.account strong{display:block;font-size:14px}.account small{color:var(--muted)}
+.result{display:none;margin-top:14px;padding:14px;background:#f1f7fc;border:1px solid #dceaf5;border-radius:12px;overflow-wrap:anywhere}.result a{color:var(--blue);font-weight:700}.hint{font-size:12px;color:var(--muted);line-height:1.5}.warning{background:#fff8e8;border:1px solid #f2dfb4;padding:12px;border-radius:12px;color:#785500;font-size:12px;line-height:1.5;margin-top:12px}
+@media(max-width:520px){body{padding:12px}.panel{padding:17px}.row{flex-direction:column}.row>*{width:100%}}
+</style></head>
+<body><div class="wrap">
+<header class="header"><div class="brand">REPAY</div><div class="sub">Payment link manager</div></header>
+<section class="panel">
+<h2>UPI Accounts</h2>
+<div class="field"><label for="holder">ACCOUNT HOLDER NAME</label><input id="holder" placeholder="e.g. Anshu Aman Singh"></div>
+<div class="field"><label for="upi">UPI ID</label><input id="upi" placeholder="name@upi" autocapitalize="off"></div>
+<button id="add">ADD UPI ACCOUNT</button>
+<div id="accounts" style="margin-top:12px"></div>
+</section>
+<section class="panel">
+<h2>Create customer payment link</h2>
+<div class="field"><label for="customer">CUSTOMER NAME</label><input id="customer" placeholder="Enter customer name"></div>
+<div class="field"><label for="product">PRODUCT / LOAN / PAYMENT DESCRIPTION</label><input id="product" placeholder="e.g. Product name, loan or EMI"></div>
+<div class="field"><label for="amount">AMOUNT (₹)</label><input id="amount" type="number" min="1" step="0.01" placeholder="Enter amount"></div>
+<div class="field"><label for="account">RECEIVING UPI ACCOUNT</label><select id="account"><option value="">Add a UPI account first</option></select></div>
+<button id="generate">GENERATE PAYMENT LINK</button>
+<div class="result" id="result"><div class="hint">CUSTOMER PAYMENT LINK</div><p id="linkText" style="font-weight:700"></p><button class="secondary" id="copy">COPY LINK</button></div>
+<p class="hint">The customer link opens a clean REPAY payment page. The customer can use a compatible UPI app on their device.</p>
+<div class="warning"><strong>Important:</strong> This starter version saves UPI accounts only in this browser on this device. The admin page is not protected by a secure login, and a static GitHub Pages site cannot keep admin details private. For real private admin access, multi-device syncing and verified payment status, a secure backend/payment gateway is required.</div>
+</section></div>
+<script>
+const KEY='repay_upi_accounts_v2';
+let accounts=[];
+try{accounts=JSON.parse(localStorage.getItem(KEY)||'[]');if(!Array.isArray(accounts))accounts=[];}catch(e){accounts=[];}
+const $=id=>document.getElementById(id);
+function save(){localStorage.setItem(KEY,JSON.stringify(accounts));render();}
+function render(){
+  $('accounts').innerHTML='';
+  $('account').innerHTML='<option value="">Choose receiving UPI account</option>';
+  accounts.forEach((a,i)=>{
+    const div=document.createElement('div');div.className='account';
+    const info=document.createElement('div');const strong=document.createElement('strong');strong.textContent=a.name;const small=document.createElement('small');small.textContent=a.upi;info.append(strong,small);
+    const del=document.createElement('button');del.className='danger';del.textContent='DELETE';del.onclick=()=>{if(confirm('Delete this UPI account?')){accounts.splice(i,1);save();}};
+    div.append(info,del);$('accounts').append(div);
+    const opt=document.createElement('option');opt.value=String(i);opt.textContent=a.name+' — '+a.upi;$('account').append(opt);
+  });
+}
+$('add').onclick=()=>{
+ const name=$('holder').value.trim(),upi=$('upi').value.trim();
+ if(!name||!upi||!upi.includes('@')){alert('Enter a valid account holder name and UPI ID.');return;}
+ if(accounts.some(a=>a.upi.toLowerCase()===upi.toLowerCase())){alert('This UPI ID is already added.');return;}
+ accounts.push({name,upi});$('holder').value='';$('upi').value='';save();
+};
+$('generate').onclick=()=>{
+ const customer=$('customer').value.trim(),product=$('product').value.trim(),amount=Number($('amount').value),idx=$('account').value;
+ if(!customer||!product||!Number.isFinite(amount)||amount<=0||idx===''){alert('Please enter customer name, product/payment description, amount and UPI account.');return;}
+ const a=accounts[Number(idx)];if(!a){alert('Please choose a valid UPI account.');return;}
+ const url=new URL('./',location.href);
+ url.search=new URLSearchParams({amount:amount.toFixed(2),pa:a.upi,pn:a.name,product,customer}).toString();
+ $('linkText').textContent=url.toString();$('result').style.display='block';
+};
+$('copy').onclick=async()=>{
+ const val=$('linkText').textContent;
+ try{await navigator.clipboard.writeText(val);$('copy').textContent='COPIED';setTimeout(()=>$('copy').textContent='COPY LINK',1600);}
+ catch(e){prompt('Copy this payment link:',val);}
+};
+render();
+</script></body></html>
