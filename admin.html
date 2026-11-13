@@ -6,220 +6,70 @@
 <meta name="theme-color" content="#050b09">
 <title>REPAY | Admin Panel</title>
 <style>
-*{box-sizing:border-box}
-body{margin:0;background:#050b09;color:#fff;font-family:Arial,sans-serif;padding:20px}
-.wrap{max-width:520px;margin:auto}
-header{text-align:center;margin:12px 0 25px}
-.logo{font-size:32px;font-weight:900;letter-spacing:3px;color:#42e6a4}
-.tag{color:#8ea69a;font-size:11px;letter-spacing:2px;margin-top:6px}
-.card{background:linear-gradient(160deg,#14231d,#0b1210);border:1px solid #244b3b;border-radius:20px;padding:22px;margin-bottom:18px}
-h2{font-size:18px;margin:0 0 18px}
-label{display:block;font-size:12px;color:#a8b9af;margin:15px 0 7px}
-input,select{width:100%;padding:14px;border-radius:11px;border:1px solid #345344;background:#07110c;color:#fff;font-size:15px;outline:none}
-input:focus,select:focus{border-color:#42e6a4}
-button{border:0;border-radius:11px;padding:14px;font-size:14px;font-weight:800;cursor:pointer}
-.primary{width:100%;background:linear-gradient(90deg,#24c987,#69efb2);color:#042016;margin-top:20px;font-size:16px}
-.secondary{background:#1b3026;color:#6feab1;border:1px solid #315b45}
-.danger{background:#351a1a;color:#ff9a9a;padding:8px 12px}
-.account{display:flex;align-items:center;justify-content:space-between;gap:10px;background:#09150f;border:1px solid #263f32;padding:12px;border-radius:10px;margin-top:9px;font-size:13px;overflow-wrap:anywhere}
-.account span{flex:1}
-.result{display:none;margin-top:18px;padding:15px;border:1px solid #315b45;border-radius:13px;background:#09150f}
-.link{font-size:12px;color:#79e9b3;overflow-wrap:anywhere;line-height:1.6;margin:10px 0}
-.copy{width:100%;background:#1d382a;color:#79e9b3;margin-top:8px}
-.hint{font-size:11px;line-height:1.6;color:#8da196;margin-top:12px}
-.msg{font-size:12px;color:#ffc66b;margin-top:12px;line-height:1.5}
-.footer{text-align:center;color:#6f8177;font-size:11px;margin:22px 0}
+*{box-sizing:border-box}body{margin:0;background:#050b09;color:#fff;font-family:Arial,sans-serif;padding:20px}.wrap{max-width:520px;margin:auto}header{text-align:center;margin:12px 0 25px}.logo{font-size:32px;font-weight:900;letter-spacing:3px;color:#42e6a4}.tag{color:#8ea69a;font-size:11px;letter-spacing:2px;margin-top:6px}.card{background:linear-gradient(160deg,#14231d,#0b1210);border:1px solid #244b3b;border-radius:20px;padding:22px;margin-bottom:18px}h2{font-size:18px;margin:0 0 18px}label{display:block;font-size:12px;color:#a8b9af;margin:15px 0 7px}input,select{width:100%;padding:14px;border-radius:11px;border:1px solid #345344;background:#07110c;color:#fff;font-size:15px;outline:none}input:focus,select:focus{border-color:#42e6a4}button{border:0;border-radius:11px;padding:14px;font-size:14px;font-weight:800;cursor:pointer}.primary{width:100%;background:linear-gradient(90deg,#24c987,#69efb2);color:#042016;margin-top:20px;font-size:16px}.danger{background:#351a1a;color:#ff9a9a;padding:8px 12px}.account{display:flex;align-items:center;justify-content:space-between;gap:10px;background:#09150f;border:1px solid #263f32;padding:12px;border-radius:10px;margin-top:9px;font-size:13px;overflow-wrap:anywhere}.account span{flex:1}.result{display:none;margin-top:18px;padding:15px;border:1px solid #315b45;border-radius:13px;background:#09150f}.link{font-size:12px;color:#79e9b3;overflow-wrap:anywhere;line-height:1.6;margin:10px 0}.copy{width:100%;background:#1d382a;color:#79e9b3;margin-top:8px}.hint{font-size:11px;line-height:1.6;color:#8da196;margin-top:12px}.msg{font-size:12px;color:#ffc66b;margin-top:12px;line-height:1.5}.footer{text-align:center;color:#6f8177;font-size:11px;margin:22px 0}
 </style>
 </head>
-<body>
-<div class="wrap">
-<header>
-  <div class="logo">REPAY</div>
-  <div class="tag">ADMIN PAYMENT CONTROL</div>
-</header>
-
+<body><div class="wrap">
+<header><div class="logo">REPAY</div><div class="tag">ADMIN PAYMENT CONTROL</div></header>
 <section class="card">
-  <h2>UPI Account Management</h2>
-  <label>UPI Account Name</label>
-  <input id="accountName" placeholder="Example: Main Account">
-  <label>UPI ID</label>
-  <input id="accountUpi" placeholder="example@bank">
-  <button class="primary" type="button" id="addAccount">+ ADD UPI ACCOUNT</button>
-  <div id="accountList"></div>
-  <div class="hint">Added accounts are saved in this browser on this device. The selected UPI ID is included in the payment link.</div>
+<h2>Admin Security</h2>
+<label>Private Admin Token</label>
+<input id="token" type="password" autocomplete="off" placeholder="Paste your Cloudflare ADMIN_TOKEN">
+<div class="hint">Token stays in this browser session only. Do not share it or add it to public GitHub files.</div>
 </section>
-
 <section class="card">
-  <h2>Create Payment Request</h2>
-
-  <label>Customer Name</label>
-  <input id="customer" placeholder="Enter customer name">
-
-  <label>Product / Service Name</label>
-  <input id="product" placeholder="Enter product or service">
-
-  <label>Payment Amount (₹)</label>
-  <input id="amount" type="number" min="1" step="0.01" placeholder="Enter amount">
-
-  <label>Receive Payment In</label>
-  <select id="receiver"></select>
-
-  <label>Payment Link Time Limit</label>
-  <select id="minutes">
-    <option value="0">No time limit</option>
-    <option value="10">10 Minutes</option>
-    <option value="15">15 Minutes</option>
-    <option value="30">30 Minutes</option>
-    <option value="60">1 Hour</option>
-  </select>
-
-  <button class="primary" type="button" id="generate">GENERATE PAYMENT LINK</button>
-  <div id="message" class="msg"></div>
-
-  <div class="result" id="result">
-    <b style="color:#72eab1">Payment link created</b>
-    <div class="link" id="generatedLink"></div>
-    <button class="copy" type="button" id="copyLink">COPY PAYMENT LINK</button>
-    <div class="hint">Send this link to your customer. The customer can open it and pay using a UPI app.</div>
-  </div>
+<h2>UPI Account Management</h2>
+<label>UPI Account Name</label><input id="accountName" placeholder="Example: Main Account">
+<label>UPI ID</label><input id="accountUpi" placeholder="example@bank">
+<button class="primary" type="button" id="addAccount">+ ADD UPI ACCOUNT</button>
+<div id="accountList"></div>
+<div class="hint">Added accounts are saved in this browser on this device.</div>
 </section>
-
-<div class="footer">REPAY · SIMPLE · SECURE · SMART</div>
-</div>
-
+<section class="card">
+<h2>Create Payment Request</h2>
+<label>Customer Name</label><input id="customer" placeholder="Enter customer name">
+<label>Product / Service Name</label><input id="product" placeholder="Enter product or service">
+<label>Payment Amount (₹)</label><input id="amount" type="number" min="1" step="0.01" placeholder="Enter amount">
+<label>Receive Payment In</label><select id="receiver"></select>
+<label>Payment Link Time Limit</label><select id="minutes">
+<option value="0">No time limit</option><option value="10">10 Minutes</option><option value="15">15 Minutes</option><option value="30">30 Minutes</option><option value="60">1 Hour</option>
+</select>
+<button class="primary" type="button" id="generate">GENERATE PAYMENT LINK</button>
+<div id="message" class="msg"></div>
+<div class="result" id="result"><b style="color:#72eab1">Payment link created</b><div class="link" id="generatedLink"></div><button class="copy" type="button" id="copyLink">COPY PAYMENT LINK</button><div class="hint">Send this link to your customer only after checking the name and amount.</div></div>
+</section><div class="footer">REPAY · SIMPLE · SECURE · SMART</div></div>
 <script>
 (function(){
-  const STORAGE_KEY = "repay_admin_accounts_v2";
-  let accounts = [];
-
-  try {
-    accounts = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
-    if(!Array.isArray(accounts)) accounts = [];
-  } catch(e) {
-    accounts = [];
-  }
-
-  const $ = id => document.getElementById(id);
-
-  function save(){
-    localStorage.setItem(STORAGE_KEY,JSON.stringify(accounts));
-  }
-
-  function render(){
-    $("accountList").innerHTML = "";
-    $("receiver").innerHTML = "";
-
-    if(accounts.length === 0){
-      $("accountList").innerHTML = '<p class="hint">No UPI accounts added yet.</p>';
-      $("receiver").innerHTML = '<option value="">Add a UPI account first</option>';
-      return;
-    }
-
-    accounts.forEach((acc,index)=>{
-      const row = document.createElement("div");
-      row.className = "account";
-
-      const details = document.createElement("span");
-      details.textContent = acc.name + " · " + acc.upi;
-
-      const remove = document.createElement("button");
-      remove.className = "danger";
-      remove.textContent = "Remove";
-      remove.type = "button";
-      remove.addEventListener("click",()=>{
-        accounts.splice(index,1);
-        save();
-        render();
-      });
-
-      row.append(details,remove);
-      $("accountList").appendChild(row);
-
-      const option = document.createElement("option");
-      option.value = String(index);
-      option.textContent = acc.name + " (" + acc.upi + ")";
-      $("receiver").appendChild(option);
-    });
-  }
-
-  $("addAccount").addEventListener("click",()=>{
-    const name = $("accountName").value.trim();
-    const upi = $("accountUpi").value.trim();
-
-    if(!name || !/^[\w.-]+@[\w.-]+$/.test(upi)){
-      $("message").textContent = "Please enter an account name and a valid UPI ID.";
-      return;
-    }
-
-    if(accounts.some(a=>a.upi.toLowerCase()===upi.toLowerCase())){
-      $("message").textContent = "This UPI ID is already added.";
-      return;
-    }
-
-    accounts.push({name,upi});
-    save();
-    $("accountName").value = "";
-    $("accountUpi").value = "";
-    $("message").textContent = "UPI account added successfully.";
-    render();
-  });
-
-  $("generate").addEventListener("click",()=>{
-    const customer = $("customer").value.trim();
-    const product = $("product").value.trim();
-    const amount = Number($("amount").value);
-    const selected = Number($("receiver").value);
-    const minutes = Number($("minutes").value);
-
-    if(!customer || !product){
-      $("message").textContent = "Please enter customer name and product name.";
-      return;
-    }
-    if(!Number.isFinite(amount) || amount <= 0){
-      $("message").textContent = "Please enter a valid payment amount.";
-      return;
-    }
-    if(!accounts.length || !accounts[selected]){
-      $("message").textContent = "Please add and select a UPI account first.";
-      return;
-    }
-
-    const account = accounts[selected];
-    const id = "rp" + Date.now().toString(36) + Math.random().toString(36).slice(2,7);
-
-    const url = new URL("index.html",location.href);
-    url.search = "";
-    url.searchParams.set("a",amount.toFixed(2));
-    url.searchParams.set("p",account.upi);
-    url.searchParams.set("n",account.name);
-    url.searchParams.set("c",customer);
-    url.searchParams.set("d",product);
-    url.searchParams.set("t",String(minutes));
-    url.searchParams.set("i",id);
-
-    $("generatedLink").textContent = url.toString();
-    $("result").style.display = "block";
-    $("message").textContent = "Your REPAY payment link is ready.";
-  });
-
-  $("copyLink").addEventListener("click",async()=>{
-    const link = $("generatedLink").textContent;
-    try{
-      await navigator.clipboard.writeText(link);
-      $("copyLink").textContent = "COPIED ✓";
-    }catch(e){
-      const temp = document.createElement("textarea");
-      temp.value = link;
-      document.body.appendChild(temp);
-      temp.select();
-      document.execCommand("copy");
-      temp.remove();
-      $("copyLink").textContent = "COPIED ✓";
-    }
-  });
-
-  render();
+ const API="https://repay-payment-api.sachinrajpoot9264.workers.dev";
+ const STORAGE_KEY="repay_admin_accounts_v2"; let accounts=[];
+ try{accounts=JSON.parse(localStorage.getItem(STORAGE_KEY)||"[]");if(!Array.isArray(accounts))accounts=[];}catch(e){accounts=[];}
+ const $=id=>document.getElementById(id);
+ function say(t){$("message").textContent=t;}
+ function save(){localStorage.setItem(STORAGE_KEY,JSON.stringify(accounts));}
+ function render(){
+  $("accountList").innerHTML="";$("receiver").innerHTML="";
+  if(!accounts.length){$("accountList").innerHTML='<p class="hint">No UPI accounts added yet.</p>';$("receiver").innerHTML='<option value="">Add a UPI account first</option>';return;}
+  accounts.forEach((acc,i)=>{const row=document.createElement("div");row.className="account";const span=document.createElement("span");span.textContent=acc.name+" · "+acc.upi;const b=document.createElement("button");b.className="danger";b.textContent="Remove";b.type="button";b.onclick=()=>{accounts.splice(i,1);save();render();};row.append(span,b);$("accountList").append(row);const op=document.createElement("option");op.value=String(i);op.textContent=acc.name+" ("+acc.upi+")";$("receiver").append(op);});
+ }
+ $("addAccount").onclick=()=>{const name=$("accountName").value.trim(),upi=$("accountUpi").value.trim();if(!name||!/^[A-Za-z0-9._-]{2,}@[A-Za-z][A-Za-z0-9.-]{1,}$/.test(upi)){say("Please enter account name and a valid UPI ID.");return;}if(accounts.some(a=>a.upi.toLowerCase()===upi.toLowerCase())){say("This UPI ID is already added.");return;}accounts.push({name,upi});save();$("accountName").value="";$("accountUpi").value="";say("UPI account added.");render();};
+ $("generate").onclick=async()=>{
+  $("result").style.display="none";
+  const token=$("token").value.trim(),customer=$("customer").value.trim(),product=$("product").value.trim(),amount=$("amount").value.trim(),selected=Number($("receiver").value),minutes=Number($("minutes").value);
+  if(!token){say("Enter your private Admin Token first.");return;}
+  if(!customer||!product){say("Enter customer name and product name.");return;}
+  if(!/^\d{1,8}(\.\d{1,2})?$/.test(amount)||Number(amount)<=0){say("Enter a valid amount.");return;}
+  if(!accounts.length||!accounts[selected]){say("Add and select a UPI account first.");return;}
+  const acc=accounts[selected];$("generate").disabled=true;$("generate").textContent="CREATING...";
+  try{
+   const response=await fetch(API+"/api/create",{method:"POST",headers:{"Content-Type":"application/json","X-Admin-Token":token},body:JSON.stringify({customer,product,payee:acc.name,upi:acc.upi,amount,minutes})});
+   const data=await response.json();
+   if(!response.ok||!data.ok)throw new Error(data.error||"Could not create payment request.");
+   const link="https://repayholder23.github.io/repay-payment/?id="+encodeURIComponent(data.id);
+   $("generatedLink").textContent=link;$("result").style.display="block";say("Payment request created. Check the details before sharing.");
+  }catch(e){say(e.message==="Failed to fetch"?"Could not reach REPAY server. Check internet and try again.":e.message);}
+  finally{$("generate").disabled=false;$("generate").textContent="GENERATE PAYMENT LINK";}
+ };
+ $("copyLink").onclick=async()=>{const link=$("generatedLink").textContent;try{await navigator.clipboard.writeText(link);$("copyLink").textContent="COPIED ✓";}catch(e){const t=document.createElement("textarea");t.value=link;document.body.append(t);t.select();document.execCommand("copy");t.remove();$("copyLink").textContent="COPIED ✓";}};
+ render();
 })();
-</script>
-</body>
-</html>
+</script></body></html>
